@@ -9,13 +9,6 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
   </PropertyGroup>
-
-    <ItemGroup>
-      <Compile Remove="Migrations\20201001191524_initial.cs" />
-      <Compile Remove="Migrations\20201001191524_initial.Designer.cs" />
-      <Compile Remove="Migrations\20201001194820_initial.cs" />
-      <Compile Remove="Migrations\20201001194820_initial.Designer.cs" />
-    </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />

@@ -25,7 +25,9 @@ namespace DesafioApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Doctor>>> GetDoctors()
         {
-            var result = await _context.Doctors.ToListAsync();
+            var result = await _context.Doctors
+                .Select(d => new { d.DoctorId, d.Nome, d.Cpf, d.Crm, Sname = d.DoctorSpecialties.Select(s => s.Specialty)})
+                .ToListAsync();
             return Ok(result);
         }
 
@@ -37,7 +39,8 @@ namespace DesafioApi.Controllers
         public async Task<ActionResult<Doctor>> GetDoctor(string Especialidades)
         {
             var doctor = await _context.Doctors
-                .Where(p => p.Especialidades.Any(e => e == Especialidades))
+                .Include(s => s.DoctorSpecialties.Select(s => s.Specialty)
+                    .Where(x => x.Nome == Especialidades))
                 .ToListAsync();
 
             if (doctor == null)
@@ -49,25 +52,26 @@ namespace DesafioApi.Controllers
         }
 
         
-        // POST: api/Doctors
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            _context.Doctors.Add(doctor);
-            await _context.SaveChangesAsync();
-            CreatedAtAction(nameof(GetDoctor), new { id = doctor.Id }, doctor);
+        //// POST: api/Doctors
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesDefaultResponseType]
+        //public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    _context.Doctors.Add(doctor);
+        //    await _context.SaveChangesAsync();
+        //    var doctors = _context.DoctorSpecialties.Select(d => d.Doctor);
+        //    CreatedAtAction(nameof(GetDoctor), new { id = doctor.DoctorSpecialties }, doctor);
 
-            return Ok(doctor.Id);
-        }
+        //    return Ok(doctor.Id);
+        //}
 
         // DELETE: api/Doctors/5
         [HttpDelete("{id}")]

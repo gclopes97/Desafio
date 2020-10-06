@@ -12,12 +12,19 @@ namespace DesafioApi.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Doctor>()
-            .Property(e => e.Especialidades)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            modelBuilder.Entity<DoctorSpecialty>()
+            .HasKey(dc => new { dc.DoctorId, dc.SpecialtiesId });
+            modelBuilder.Entity<DoctorSpecialty>()
+                .HasOne(dc => dc.Doctor)
+                .WithMany(d => d.DoctorSpecialties)
+                .HasForeignKey(dc => dc.DoctorId);
+            modelBuilder.Entity<DoctorSpecialty>()
+                .HasOne(dc => dc.Specialty)
+                .WithMany(s => s.DoctorSpecialties)
+                .HasForeignKey(dc => dc.SpecialtiesId);
         }
         public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<Specialty> Specialties { get; set; }
+        public DbSet<DoctorSpecialty> DoctorSpecialties { get; set; }
     }
 }

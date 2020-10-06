@@ -7,7 +7,7 @@ namespace DesafioApi.Models
     public class Doctor
     {
         [Required]
-        public int Id { get; set; }
+        public int DoctorId { get; set; }
 
         [Required(ErrorMessage = "Nome é obrigatorio.")]
         [MaxLength(255)]
@@ -21,6 +21,6 @@ namespace DesafioApi.Models
         public string Crm { get; set; }
 
         [MinLength(1)]
-        public string[] Especialidades { get; set; }
+        public IEnumerable<DoctorSpecialty> DoctorSpecialties { get; set; }
     }
 }
